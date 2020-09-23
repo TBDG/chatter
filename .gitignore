@@ -1,0 +1,10 @@
+# builds and outputs
+
+# IDEs
+.idea
+.vscode
+
+# modules
+node_modules
+
+.env
