@@ -2,17 +2,18 @@ import React, {useState} from 'react';
 import './App.css';
 import io from 'socket.io-client'
 
-const socket = io.connect("http://localhost:4040")
+const socket = io.connect("http://localhost:4000")
 
 const App: React.FC = () => {
     const [handle, setHandle] = useState('')
     const [message, setMessage] = useState('')
     const [feedback, setFeedback] = useState('')
-    const [output, setOutput] = useState('')
+    const [output, setOutput] = useState([])
 
-    socket.on('chat', (data:string)=> {
+    socket.on('chat', (data:any)=> {
         setFeedback('')
-        setOutput(data)
+        setOutput(output.concat(data))
+        console.log(data, 'data')
     })
 
     socket.on('typing', (data:string) => {
@@ -21,16 +22,17 @@ const App: React.FC = () => {
 
     function addChat() {
         socket.emit('chat', {
-            message: message,
-            handle: handle
+            message,
+            handle
         })
     }
 
     return (
+
         <div className="App">
             <div id="chat">
                 <div id="chat-window">
-                    <div id="output"><p>{output}</p></div>
+                    <div id="output">{output.map((e:any)=><p>{e.handle}: {e.message}</p>)}</div>
                     <div id="feedback"><p>{feedback}</p></div>
                 </div>
                 <input id="handle"
